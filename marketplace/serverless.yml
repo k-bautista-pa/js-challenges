@@ -8,14 +8,26 @@ provider:
 
 functions:
   getSeller:
-    handler: handler.getAllSellers
+    handler: SellerHandler.getAllSellers
     events:
       - http:
           path: sellers
           method: get
   createSeller:
-    handler: handler.createSeller
+    handler: SellerHandler.createSeller
     events:
       - http:
           path: seller
           method: post
+  updateSeller:
+    handler: SellerHandler.updateSeller
+    events:
+      - http:
+          path: seller/{id}
+          method: put
+  deleteSeller:
+    handler: SellerHandler.deleteSeller
+    events:
+      - http:
+          path: seller/{id}
+          method: delete
