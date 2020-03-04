@@ -1,4 +1,5 @@
 'use strict';
+const db = require('./db_connect');
 
 module.exports.hello = async event => {
   return {
@@ -12,7 +13,23 @@ module.exports.hello = async event => {
       2
     ),
   };
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
 };
+
+module.exports.getAllSellers = async event => {
+  
+  try {
+    // TODO: Refactor table names as constants
+    const rows = await db.getAll('seller');
+    return {
+      statusCode: 200,
+      body: JSON.stringify(rows)
+    };
+  }
+  catch(error) { // TODO: Refactor as error message util.
+    console.log('Get All Sellers error: ', error);
+    return {
+      statusCode: error.statusCode || 500,
+      body: `Error: Could not find sellers: ${error}`
+    }
+  }
+}
