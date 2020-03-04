@@ -7,15 +7,15 @@ provider:
   region: ap-southeast-1
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: get
   getSeller:
     handler: handler.getAllSellers
     events:
       - http:
           path: sellers
           method: get
+  createSeller:
+    handler: handler.createSeller
+    events:
+      - http:
+          path: seller
+          method: post

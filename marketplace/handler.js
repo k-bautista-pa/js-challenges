@@ -1,35 +1,37 @@
 'use strict';
-const db = require('./db_connect');
 
-module.exports.hello = async event => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
-};
+const httpStatusCode = require('http-status-codes');
+const { OK, CREATED } = httpStatusCode;
+
+const db = require('./db_connect');
+const constants = require('./util/constants');
+const { TABLES } = constants;
+const { SELLER_TABLE, PRODUCT_TABLE, CART_TABLE } = TABLES;
+const helpers = require('./util/helpers');
+const { successMessage, errorMessage } = helpers;
+
 
 module.exports.getAllSellers = async event => {
-  
   try {
-    // TODO: Refactor table names as constants
-    const rows = await db.getAll('seller');
-    return {
-      statusCode: 200,
-      body: JSON.stringify(rows)
-    };
+    const rows = await db.getAll(SELLER_TABLE);
+    return successMessage(OK, {sellers: rows});
   }
-  catch(error) { // TODO: Refactor as error message util.
-    console.log('Get All Sellers error: ', error);
-    return {
-      statusCode: error.statusCode || 500,
-      body: `Error: Could not find sellers: ${error}`
-    }
+  catch(error) {
+    console.log('[SELLER] GET All error: ', error);
+    return errorMessage(error);
   }
 }
+
+
+module.exports.createSeller = async event => {
+  try {
+    const data = JSON.parse(event.body);
+    await db.insert(SELLER_TABLE, data);
+    return successMessage(CREATED, {message: `Succesfully created user ${data.name}.`});
+  }
+  catch(error) {
+    console.log('[SELLER] Create seller error: ', error);
+    return errorMessage(error);
+  }
+}
+
