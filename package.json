@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "http-status-codes": "^1.4.0",
     "postgresql-easy": "^1.2.5"
   }
 }

@@ -31,3 +31,21 @@ functions:
       - http:
           path: seller/{id}
           method: delete
+  createProduct:
+    handler: ProductHandler.createProduct
+    events:
+      - http:
+          path: seller/{id}/product
+          method: post
+  updateProduct:
+    handler: ProductHandler.updateProduct
+    events:
+      - http:
+          path: product/{id}
+          method: put
+  deleteProduct:
+    handler: ProductHandler.deleteProduct
+    events:
+      - http:
+          path: product/{id}
+          method: delete
