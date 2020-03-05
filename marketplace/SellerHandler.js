@@ -37,10 +37,10 @@ module.exports.createSeller = async event => {
 module.exports.updateSeller = async event => {
   try {
     const id = event.pathParameters.id;
-    const data = JSON.parse(event.body);
     const record = await db.getById(SELLER_TABLE, id);
     
     if(record) {
+      const data = JSON.parse(event.body);
       await db.updateById(SELLER_TABLE, id, data);
       return successMessage(OK, {message: `Successfully updated user ${record.name}.`});
     }
@@ -56,12 +56,12 @@ module.exports.updateSeller = async event => {
 module.exports.deleteSeller = async event => {
   try {
     const id = event.pathParameters.id;
-    const data = JSON.parse(event.body);
     const record = await db.getById(SELLER_TABLE, id);
     const username = record.name;
     // @TODO: Soft or hard delete?
     
     if(record) {
+      const data = JSON.parse(event.body);
       await db.deleteById(SELLER_TABLE, id, data);
       return successMessage(OK, {message: `Successfully deleted ${username}.`});
     }
