@@ -49,3 +49,15 @@ functions:
       - http:
           path: product/{id}
           method: delete
+  createCart:
+    handler: CartHandler.createCart
+    events:
+      - http:
+          path: cart
+          method: post
+  addProductToCart:
+    handler: CartHandler.addProductToCart
+    events:
+      - http:
+          path: cart/{cartId}/product/{productId}
+          method: put

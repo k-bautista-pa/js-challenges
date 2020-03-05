@@ -13,20 +13,21 @@ const { successMessage, errorMessage } = helpers;
 
 module.exports.createProduct = async event => {
   try {
-    const sellerId = event.pathParameters.sellerId;
+    const sellerId = event.pathParameters.id;
     const record = await db.getById(SELLER_TABLE, sellerId);
 
     if(record) {
       const { name, description } = JSON.parse(event.body);
       const data = {
         name, description,
-        seller_id: sellerId
+        seller_id: sellerId,
+        date_posted: (new Date()).toISOString();
       };
       await db.insert(PRODUCT_TABLE, data);
       return successMessage(CREATED, {message: `Successfully added product ${name} to seller ${record.name}.`});
     }
 
-    return errorMessage({statusCode: NOT_FOUND, message: 'User does not exist.'});
+    return errorMessage({statusCode: NOT_FOUND, message: 'Seller does not exist.'});
   }
   catch(error) {
     console.log('[PRODUCT] Create product error: ', error);
@@ -63,7 +64,7 @@ module.exports.deleteProduct = async event => {
     if(record) {
       const data = JSON.parse(event.body);
       await db.deleteById(PRODUCT_TABLE, id, data);
-      return successMessage(OK, {message: `Successfully updated product ${record.name}.`});
+      return successMessage(OK, {message: `Successfully updated product ${productName}.`});
     }
 
     return errorMessage({statusCode: NOT_FOUND, message: 'Product does not exist.'});

@@ -45,7 +45,7 @@ module.exports.updateSeller = async event => {
       return successMessage(OK, {message: `Successfully updated user ${record.name}.`});
     }
 
-    return errorMessage({statusCode: NOT_FOUND, message: 'User does not exist.'});
+    return errorMessage({statusCode: NOT_FOUND, message: 'Seller does not exist.'});
   }
   catch(error) {
     console.log('[SELLER] Update seller error: ', error);
@@ -66,7 +66,7 @@ module.exports.deleteSeller = async event => {
       return successMessage(OK, {message: `Successfully deleted ${username}.`});
     }
 
-    return errorMessage({statusCode: NOT_FOUND, message: 'User does not exist.'});
+    return errorMessage({statusCode: NOT_FOUND, message: 'Seller does not exist.'});
   }
   catch(error) {
     console.log('[SELLER] Delete seller error: ', error);
