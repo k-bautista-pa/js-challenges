@@ -10,6 +10,11 @@ const { SELLER_TABLE } = TABLES;
 const helpers = require('./util/helpers');
 const { successMessage, errorMessage } = helpers;
 
+const getSellerByIdQuery = id => { // implement "soft" delete
+  return `
+    SELECT * FROM ${SELLER_TABLE} WHERE id='${id}' AND is_deleted=false
+  `;
+}
 
 module.exports.getAllSellers = async event => {
   try {
@@ -37,10 +42,11 @@ module.exports.createSeller = async event => {
 module.exports.updateSeller = async event => {
   try {
     const id = event.pathParameters.id;
-    const record = await db.getById(SELLER_TABLE, id);
+    const rows = await db.query(getSellerByIdQuery(id));
     
-    if(record) {
+    if(rows.length > 0) {
       const data = JSON.parse(event.body);
+      const record = rows[0];
       await db.updateById(SELLER_TABLE, id, data);
       return successMessage(OK, {message: `Successfully updated user ${record.name}.`});
     }
@@ -56,13 +62,11 @@ module.exports.updateSeller = async event => {
 module.exports.deleteSeller = async event => {
   try {
     const id = event.pathParameters.id;
-    const record = await db.getById(SELLER_TABLE, id);
-    const username = record.name;
-    // @TODO: Soft or hard delete?
+    const rows = await db.query(getSellerByIdQuery(id));
     
-    if(record) {
-      const data = JSON.parse(event.body);
-      await db.deleteById(SELLER_TABLE, id, data);
+    if(rows.length > 0) {
+      const username = rows[0].name;
+      await db.updateById(SELLER_TABLE, id, {is_deleted: true});
       return successMessage(OK, {message: `Successfully deleted ${username}.`});
     }
 
