@@ -6,13 +6,21 @@ const { OK, CREATED, NOT_FOUND } = httpStatusCode;
 const db = require('./db_connect');
 const constants = require('./util/constants');
 const { TABLES } = constants;
-const { SELLER_TABLE } = TABLES;
+const { SELLER_TABLE, PRODUCT_TABLE } = TABLES;
 const helpers = require('./util/helpers');
 const { successMessage, errorMessage } = helpers;
 
 const getSellerByIdQuery = id => { // implement "soft" delete
   return `
     SELECT * FROM ${SELLER_TABLE} WHERE id='${id}' AND is_deleted=false
+  `;
+}
+
+const deleteSellerProductsQuery = sellerId => { // delete seller products
+  return `
+    UPDATE ${PRODUCT_TABLE}
+    SET is_deleted=true
+    WHERE seller_id='${sellerId}'
   `;
 }
 
@@ -67,6 +75,7 @@ module.exports.deleteSeller = async event => {
     if(rows.length > 0) {
       const username = rows[0].name;
       await db.updateById(SELLER_TABLE, id, {is_deleted: true});
+      await db.query(deleteSellerProductsQuery(id));
       return successMessage(OK, {message: `Successfully deleted ${username}.`});
     }
 
