@@ -24,7 +24,14 @@ module.exports.getProductReport = async event => {
 module.exports.getTopSellers = async event => {
   try {
     const rows = await db.getAll(TOP_SELLER);
-    return successMessage(OK, {sellers: rows});
+    const topSellers = rows.map((item, index) => {
+      const { seller_id, seller_name, item_quantity_in_cart } = item;
+      return {
+        position: (index + 1),
+        seller_id, seller_name, item_quantity_in_cart
+      }
+    })
+    return successMessage(OK, {sellers: topSellers});
   }
   catch(error) {
     console.log('[Report] Top Sellers Report error: ', error);
