@@ -5,8 +5,8 @@ const { OK } = httpStatusCode;
 
 const db = require('./db_connect');
 const constants = require('./util/constants');
-const { VIEWS } = constants;
-const { PRODUCT_IN_CART, TOP_SELLER } = VIEWS;
+const { REPORT_VIEWS } = constants;
+const { PRODUCT_IN_CART, TOP_SELLER } = REPORT_VIEWS;
 const helpers = require('./util/helpers');
 const { successMessage, errorMessage } = helpers;
 
