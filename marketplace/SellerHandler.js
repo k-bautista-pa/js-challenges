@@ -5,8 +5,9 @@ const { OK, CREATED, NOT_FOUND } = httpStatusCode;
 
 const db = require('./db_connect');
 const constants = require('./util/constants');
-const { TABLES } = constants;
+const { TABLES, REPORT_VIEWS } = constants;
 const { SELLER_TABLE, PRODUCT_TABLE } = TABLES;
+const { SELLER_PRODUCT } = REPORT_VIEWS;
 const helpers = require('./util/helpers');
 const { successMessage, errorMessage } = helpers;
 
@@ -26,8 +27,40 @@ const deleteSellerProductsQuery = sellerId => { // delete seller products
 
 module.exports.getAllSellers = async event => {
   try {
-    const rows = await db.getAll(SELLER_TABLE);
-    return successMessage(OK, {sellers: rows});
+    const rows = await db.getAll(SELLER_PRODUCT);
+
+    const reducer = (acc, current) => {
+      const {
+        seller_id, seller_name, seller_description,
+        product_id, product_name, product_description,
+        date_posted
+      } = current
+      const position = acc.findIndex(item => item.seller_id === current.seller_id);
+
+      if(position === -1) { // seller not yet in accumulator
+        acc.push({
+          seller_id, seller_name, seller_description,
+          products: [{
+            product_id, product_name, product_description, date_posted
+          }]
+        });
+      }
+      else { // seller already in accumulator
+        const seller = acc[position];
+        const {
+          seller_id, seller_name, seller_description, products
+        } = seller;
+        acc[position] = {
+          seller_id, seller_name, seller_description,
+          products: [...products, {product_id, product_name, product_description, date_posted}]
+        }
+      }
+
+      return acc;
+    }
+
+    const topSellers = rows.reduce(reducer, []);
+    return successMessage(OK, {sellers: topSellers});
   }
   catch(error) {
     console.log('[SELLER] GET All error: ', error);

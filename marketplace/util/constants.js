@@ -12,5 +12,6 @@ module.exports.CART_PRODUCT_FIELDS = {
 
 module.exports.REPORT_VIEWS = {
   PRODUCT_IN_CART: 'product_in_cart',
-  TOP_SELLER: 'top_seller'
+  TOP_SELLER: 'top_seller',
+  SELLER_PRODUCT: 'seller_product'
 }
