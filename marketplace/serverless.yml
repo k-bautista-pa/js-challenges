@@ -61,3 +61,15 @@ functions:
       - http:
           path: cart/{cartId}/product/{productId}
           method: put
+  getProductReport:
+    handler: ReportHandler.getProductReport
+    events:
+      - http:
+          path: report/product
+          method: get
+  getTopSellers:
+    handler: ReportHandler.getTopSellers
+    events:
+      - http:
+          path: report/topsellers
+          method: get
