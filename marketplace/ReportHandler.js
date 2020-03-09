@@ -6,13 +6,13 @@ const { OK } = httpStatusCode;
 const db = require('./db_connect');
 const constants = require('./util/constants');
 const { VIEWS } = constants;
-const { PRODUCTS_IN_CART, TOP_SELLER } = VIEWS;
+const { PRODUCT_IN_CART, TOP_SELLER } = VIEWS;
 const helpers = require('./util/helpers');
 const { successMessage, errorMessage } = helpers;
 
 module.exports.getProductReport = async event => {
   try {
-    const rows = await db.getAll(PRODUCTS_IN_CART);
+    const rows = await db.getAll(PRODUCT_IN_CART);
     return successMessage(OK, {products: rows});
   }
   catch(error) {
